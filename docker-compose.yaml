@@ -1,0 +1,69 @@
+version: "3.9"
+
+services:
+  api:
+    image: thecodingmachine/php:8.2-v4-apache-node18
+    user: root
+    ports:
+      - 8000:80
+    volumes:
+      - ./api:/var/www/html
+    container_name: api-challenge1
+    environment:
+      APACHE_DOCUMENT_ROOT: public/
+      APACHE_EXTENSIONS: headers rewrite
+      PHP_EXTENSIONS: pgsql pdo_pgsql
+      PHP_INI_MEMORY_LIMIT: -1
+      PHP_INI_POST_MAX_SIZE: 512M
+      PHP_INI_UPLOAD_MAX_FILESIZE: 512M
+      PHP_INI_DATE_TIMEZONE: Europe/Paris
+    networks:
+      - challenge1
+
+  front-dev:
+    image: thecodingmachine/nodejs:v2-18-bullseye
+    container_name: front-dev-challenge1
+    user: root
+    ports:
+      - 3000:3000
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./front:/usr/src/app
+    networks:
+      - challenge1
+
+  front-prod:
+    image: thecodingmachine/nodejs:v2-18-apache-bullseye
+    container_name: front-prod-challenge1
+    ports:
+      - 8080:80
+    volumes:
+      - ./front:/usr/src/app
+    environment:
+      APACHE_DOCUMENT_ROOT: dist/
+      APACHE_EXTENSIONS: headers
+    networks:
+      - challenge1
+
+    
+  db:
+    image: postgres:14.8
+    container_name: db
+    environment:
+      POSTGRES_USER: challenge1
+      POSTGRES_PASSWORD: challenge1
+      POSTGRES_DB: challenge1
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - challenge1
+    
+
+networks:
+  challenge1:
+    
+volumes:
+  db-data:
