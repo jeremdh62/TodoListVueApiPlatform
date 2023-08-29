@@ -13,10 +13,24 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            lazy: true
+        api:
+            pattern: ^/api/
+            stateless: true
             provider: app_user_provider
-
+            jwt: ~
+        main:
+            json_login:
+                check_path: auth # The name in routes.yaml is enough for mapping
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            refresh_jwt:
+                check_path: gesdinet_jwt_refresh_token
+            logout:
+                path: api_token_invalidate
+                # where to redirect after logout
+                # target: app_any_route
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
@@ -27,7 +41,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/auth/token/refresh, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 when@test:
     security:
