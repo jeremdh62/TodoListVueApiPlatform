@@ -53,6 +53,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['write_user'])]
     private ?string $password = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isVerify = null;
+
+    public function __construct()
+    {
+        $this->isVerify = false;
+        $this->roles = ['ROLE_USER'];
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -159,6 +168,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setToken($token)
     {
         $this->token = $token;
+
+        return $this;
+    }
+
+
+    public function getIsVerify() : ?bool
+    {
+        return $this->isVerify;
+    }
+
+    public function setIsVerify(bool $isVerify) : self
+    {
+        $this->isVerify = $isVerify;
 
         return $this;
     }
