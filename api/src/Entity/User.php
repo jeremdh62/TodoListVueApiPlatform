@@ -6,6 +6,8 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
 use App\Controller\RegisterController;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -56,10 +58,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $isVerify = null;
 
+    #[ORM\OneToMany(mappedBy: 'attachedTo', targetEntity: Task::class)]
+    private Collection $tasks;
+
     public function __construct()
     {
         $this->isVerify = false;
         $this->roles = ['ROLE_USER'];
+        $this->tasks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,6 +187,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerify(bool $isVerify) : self
     {
         $this->isVerify = $isVerify;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Task[]
+     */
+    public function getTasks() : Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task) : self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks[] = $task;
+            $task->setAttachedTo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task) : self
+    {
+        if ($this->tasks->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getAttachedTo() === $this) {
+                $task->setAttachedTo(null);
+            }
+        }
 
         return $this;
     }

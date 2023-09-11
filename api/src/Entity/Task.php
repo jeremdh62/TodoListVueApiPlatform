@@ -2,11 +2,70 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\TaskRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
+#[Post(
+    uriTemplate: "/tasks",
+    security: "is_granted('ROLE_USER')",
+    denormalizationContext: [
+        'groups' => ['task:write']
+    ],
+    normalizationContext: [
+        'groups' => ['task:read']
+    ]
+)]
+#[GetCollection(
+    uriTemplate: "/tasks",
+    security: "is_granted('ROLE_USER')",
+    paginationEnabled: true,
+    paginationItemsPerPage: 10,
+    order: ['deadline' => 'ASC'],
+    denormalizationContext: [
+        'groups' => ['task:write']
+    ],
+    normalizationContext: [
+        'groups' => ['task:read']
+    ]
+)]
+#[Patch(
+    uriTemplate: "/tasks/{id}",
+    security: "is_granted('ROLE_USER') and object.getAttachedTo() == user",
+    denormalizationContext: [
+        'groups' => ['task:write']
+    ],
+    normalizationContext: [
+        'groups' => ['task:read']
+    ]
+)]
+#[Get(
+    uriTemplate: "/tasks/{id}",
+    security: "is_granted('ROLE_USER') and object.getAttachedTo() == user",
+    denormalizationContext: [
+        'groups' => ['task:write']
+    ],
+    normalizationContext: [
+        'groups' => ['task:read']
+    ]
+)]
+#[Delete(
+    uriTemplate: "/tasks/{id}",
+    security: "is_granted('ROLE_USER') and object.getAttachedTo() == user",
+    denormalizationContext: [
+        'groups' => ['task:write']
+    ],
+    normalizationContext: [
+        'groups' => ['task:read']
+    ]
+)]
 class Task
 {
     #[ORM\Id]
@@ -15,19 +74,29 @@ class Task
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['task:read', 'task:write'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['task:read', 'task:write'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['task:read', 'task:write'])]
     private ?string $priority = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['task:read', 'task:write'])]
     private ?string $status = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['task:read', 'task:write'])]
     private ?\DateTimeInterface $deadline = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tasks')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['task:read', 'task:write'])]
+    private ?User $attachedTo = null;
 
     public function getId(): ?int
     {
@@ -90,6 +159,18 @@ class Task
     public function setDeadline(\DateTimeInterface $deadline): static
     {
         $this->deadline = $deadline;
+
+        return $this;
+    }
+
+    public function getAttachedTo(): ?User
+    {
+        return $this->attachedTo;
+    }
+
+    public function setAttachedTo(?User $attachedTo): static
+    {
+        $this->attachedTo = $attachedTo;
 
         return $this;
     }
