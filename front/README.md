@@ -1,4 +1,4 @@
-# vue-project
+# keep-pdf
 
 This template should help get you started developing with Vue 3 in Vite.
 
@@ -9,6 +9,35 @@ This template should help get you started developing with Vue 3 in Vite.
 ## Customize configuration
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
+
+
+## Docker Setup 
+
+### Create external network lynkware-proxy
+
+```bash
+make create-network
+```
+
+### Start the project
+```bash
+make up
+```
+
+### Stop the project
+```bash
+make down
+```
+
+### Enter the container dev
+```bash
+make exec
+```
+
+### Enter the container prod
+```bash
+make exec-prod
+```
 
 ## Project Setup
 
@@ -32,6 +61,22 @@ npm run build
 
 ```sh
 npm run test:unit
+```
+
+### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+
+```sh
+npm run test:e2e:dev
+```
+
+This runs the end-to-end tests against the Vite development server.
+It is much faster than the production build.
+
+But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
+
+```sh
+npm run build
+npm run test:e2e
 ```
 
 ### Lint with [ESLint](https://eslint.org/)

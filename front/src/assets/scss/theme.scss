@@ -1,0 +1,32 @@
+/*!
+ * Theme: Default
+ * Package: NioBoard
+ * Version: 1.0.0
+ * Updated: 10.21.2022
+ * Author: Softnio
+ * Author URI: http://themeforest.net/user/softnio
+**/
+/** WRITE YOUR OWN STYLE **/
+
+.pristine-error {
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: .875rem;
+    color: #df3c4e;
+}
+
+.has-danger {
+    input {
+        border-color: #df3c4e;
+        padding-right: 2.75rem;
+    }
+    .div-danger {
+        border-color: #df3c4e;
+        padding-right: 2.75rem;
+    }
+}
+
+.disabled-content {
+    pointer-events: none;
+    opacity: 0.7;
+}
