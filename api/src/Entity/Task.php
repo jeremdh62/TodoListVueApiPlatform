@@ -7,10 +7,13 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\enum\PriorityTask;
+use App\enum\StatusTask;
 use App\Repository\TaskRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 #[Post(
@@ -75,28 +78,30 @@ class Task
 
     #[ORM\Column(length: 255)]
     #[Groups(['task:read', 'task:write'])]
-    private ?string $title = null;
+    private ?string $title;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['task:read', 'task:write'])]
-    private ?string $description = null;
+    private ?string $description;
 
     #[ORM\Column(length: 255)]
     #[Groups(['task:read', 'task:write'])]
-    private ?string $priority = null;
+    #[Assert\Choice(choices: [PriorityTask::LOW, PriorityTask::MEDIUM, PriorityTask::HIGH])]
+    private ?string $priority;
 
     #[ORM\Column(length: 255)]
     #[Groups(['task:read', 'task:write'])]
-    private ?string $status = null;
+    #[Assert\Choice(choices: [StatusTask::TODO, StatusTask::DOING, StatusTask::DONE])]
+    private ?string $status;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Groups(['task:read', 'task:write'])]
-    private ?\DateTimeInterface $deadline = null;
+    private ?\DateTimeInterface $deadline;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tasks')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['task:read', 'task:write'])]
-    private ?User $attachedTo = null;
+    private ?User $attachedTo;
 
     public function getId(): ?int
     {

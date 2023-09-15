@@ -35,11 +35,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['read_user','write_user'])]
+    #[Groups(['read_user', 'write_user'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['read_user','write_user'])]
+    #[Groups(['read_user', 'write_user'])]
     private ?string $username = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -102,7 +102,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = 'ROLE_OBSERVATOR';
 
         return array_unique($roles);
     }
@@ -140,7 +140,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Get the value of username
-     */ 
+     */
     public function getUsername()
     {
         return $this->username;
@@ -150,7 +150,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Set the value of username
      *
      * @return  self
-     */ 
+     */
     public function setUsername($username)
     {
         $this->username = $username;
@@ -160,7 +160,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Get the value of token
-     */ 
+     */
     public function getToken()
     {
         return $this->token;
@@ -170,7 +170,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Set the value of token
      *
      * @return  self
-     */ 
+     */
     public function setToken($token)
     {
         $this->token = $token;
@@ -179,12 +179,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
-    public function getIsVerify() : ?bool
+    public function getIsVerify(): ?bool
     {
         return $this->isVerify;
     }
 
-    public function setIsVerify(bool $isVerify) : self
+    public function setIsVerify(bool $isVerify): self
     {
         $this->isVerify = $isVerify;
 
@@ -194,12 +194,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection|Task[]
      */
-    public function getTasks() : Collection
+    public function getTasks(): Collection
     {
         return $this->tasks;
     }
 
-    public function addTask(Task $task) : self
+    public function addTask(Task $task): self
     {
         if (!$this->tasks->contains($task)) {
             $this->tasks[] = $task;
@@ -209,7 +209,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeTask(Task $task) : self
+    public function removeTask(Task $task): self
     {
         if ($this->tasks->removeElement($task)) {
             // set the owning side to null (unless already changed)
