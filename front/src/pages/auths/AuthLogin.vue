@@ -50,6 +50,9 @@
                                                 </Col>
                                             </Row>
                                         </form>
+                                    <div class="text-center mt-4">
+                                        <p class="small">Don't have an account? <router-link to="/auths/auth-register">Register</router-link></p>
+                                    </div>
                                     </CardBody>
                                 </Col>
                             </Row>
@@ -145,7 +148,7 @@ export default {
 
             isLog.then((res) => {
                 if(res.status === 200){
-                    this.$router.push('/pdfs');
+                    this.$router.push('/');
                 }else{
                     this.authForm.showError = true;
                     setTimeout(() => {

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Controller\RegisterController;
 use App\Repository\UserRepository;
@@ -27,11 +28,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['read_user']],
     processor: UserPasswordHasher::class,
 )]
+#[GetCollection(
+    name: 'get_all_users',
+    uriTemplate: '/users',
+    paginationEnabled: true,
+    denormalizationContext: ['groups' => ['write_user']],
+    normalizationContext: ['groups' => ['read_user']],
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read_user'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]

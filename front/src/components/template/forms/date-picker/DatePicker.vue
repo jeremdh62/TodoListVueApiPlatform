@@ -63,6 +63,10 @@ export default {
             type: Boolean,
             default: false
         },
+        value: {
+            type: Date,
+            default: null
+        }
     },
     components: {
         InputGroup,
@@ -84,15 +88,21 @@ export default {
                 title: this.title,
                 todayBtn: this.todayBtn,
                 todayBtnMode: this.todayBtnMode,
-                weekStart: this.weekStart
+                weekStart: this.weekStart,
+                defaultViewDate: this.value
             };
                     
-            const datepicker = this.rangePicker ? new DateRangePicker(elm, opt) : new Datepicker(elm, opt);
+            const datepicker = this.rangePicker ? new DateRangePicker(elm, opt) : new Datepicker(elm, opt);            
+            elm.addEventListener('changeDate', (e) => {
+                this.$emit('change', e);
+            });
+
             datepicker;
         }
     },
     mounted(){
         this.DatePicker();
-    }
+    },
+    emits: ['change']
 }
 </script>

@@ -80,33 +80,9 @@
                                 <CardBody class="bg-darker is-theme has-mask has-mask-1 h-100 d-flex flex-column justify-content-end">
                                     <div class="mask mask-1"></div><!-- .mask-->
                                     <div class="brand-logo">
-                                        <Logo />
+                                        <Logo :isKeep="true" :logo-width="50" />
                                     </div>
-                                    <Row>
-                                        <Col sm="11">
-                                            <div class="mt-4">
-                                                <div class="h1 title mb-3">Welcome to <br> our community</div>
-                                                <p>Discover how to manage Two-Factor Authentication in Joomla. The two-factor authentication in Joomla is a very popular security practice.</p>
-                                            </div>
-                                        </Col>
-                                    </Row>
-                                    <div class="mt-5">
-                                        <MediaGroup overlap>
-                                            <Media size="sm" shape="circle" class="media-border border-white">
-                                                <Img src="/images/avatar/a.jpg" alt="" />
-                                            </Media>
-                                            <Media size="sm" shape="circle" class="media-border border-white">
-                                                <Img src="/images/avatar/b.jpg" alt="" />
-                                            </Media>
-                                            <Media size="sm" shape="circle" class="media-border border-white">
-                                                <Img src="/images/avatar/c.jpg" alt="" />
-                                            </Media>
-                                            <Media size="sm" shape="circle" class="media-border border-white">
-                                                <Img src="/images/avatar/d.jpg" alt="" />
-                                            </Media>
-                                        </MediaGroup>
-                                        <p class="small mt-2">More than 2k people joined us, it's your turn</p>
-                                    </div>
+                                   
                                 </CardBody>
                             </Col>
                         </Row>

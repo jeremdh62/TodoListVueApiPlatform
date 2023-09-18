@@ -41,7 +41,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[Patch(
     uriTemplate: "/tasks/{id}",
-    security: "is_granted('ROLE_USER') and object.getAttachedTo() == user",
+    security: "is_granted('ROLE_USER')",
     denormalizationContext: [
         'groups' => ['task:write']
     ],
@@ -51,7 +51,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[Get(
     uriTemplate: "/tasks/{id}",
-    security: "is_granted('ROLE_USER') and object.getAttachedTo() == user",
+    security: "is_granted('ROLE_USER')",
     denormalizationContext: [
         'groups' => ['task:write']
     ],
@@ -61,7 +61,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[Delete(
     uriTemplate: "/tasks/{id}",
-    security: "is_granted('ROLE_USER') and object.getAttachedTo() == user",
+    security: "is_granted('ROLE_USER')",
     denormalizationContext: [
         'groups' => ['task:write']
     ],
@@ -74,6 +74,7 @@ class Task
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['task:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -86,12 +87,12 @@ class Task
 
     #[ORM\Column(length: 255)]
     #[Groups(['task:read', 'task:write'])]
-    #[Assert\Choice(choices: [PriorityTask::LOW, PriorityTask::MEDIUM, PriorityTask::HIGH])]
+    #[Assert\Choice(choices: [PriorityTask::LOW->value, PriorityTask::MEDIUM->value, PriorityTask::HIGH->value])]
     private ?string $priority;
 
     #[ORM\Column(length: 255)]
     #[Groups(['task:read', 'task:write'])]
-    #[Assert\Choice(choices: [StatusTask::TODO, StatusTask::DOING, StatusTask::DONE])]
+    #[Assert\Choice(choices: [StatusTask::TODO->value, StatusTask::DOING->value, StatusTask::DONE->value])]
     private ?string $status;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -99,7 +100,7 @@ class Task
     private ?\DateTimeInterface $deadline;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tasks')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     #[Groups(['task:read', 'task:write'])]
     private ?User $attachedTo;
 

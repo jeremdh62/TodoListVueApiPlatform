@@ -1,10 +1,13 @@
 api_platform:
-  title: 'API Todo List'
-  description: 'API Todo List'
-  version: '0.0.1'
+  title: "API Todo List"
+  description: "API Todo List"
+  version: "0.0.1"
+
+  defaults:
+    pagination_items_per_page: 30
 
   mapping:
-    paths: ['%kernel.project_dir%/src/Entity']
+    paths: ["%kernel.project_dir%/src/Entity"]
 
   swagger:
     api_keys:

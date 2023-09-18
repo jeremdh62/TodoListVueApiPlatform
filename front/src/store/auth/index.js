@@ -19,7 +19,7 @@ const authStore = {
                 state.jwtDecoded = jwt_decode(authJwt.token);
                 localStorage.setItem('auth', JSON.stringify(authJwt));
                 state.userName = jwt_decode(authJwt.token).realusername;
-                state.userNameFormated = formatUserName(state.userName);
+                state.userNameFormated = formatUserName(jwt_decode(authJwt.token).username);
             }
         },
         addNumberOfRefresh(state) {
@@ -51,11 +51,9 @@ const authStore = {
             try {
                const response = await instanceAxios.post('/auth', user);
                 commit('setAuthJwt', response.data);
-
-                console.log(response);
     
                 if (response.status === 200) {
-                    localStorage.setItem('auth', response.data);
+                    localStorage.setItem('auth', JSON.stringify(response.data));
                     
                     return {status: response.status, data: response.data}
                 } else {
@@ -78,12 +76,12 @@ const authStore = {
         refreshJWT: async ({ commit }) => {
             try {
                 const response = await instanceAxios.post('/auth/token/refresh', {
-                    refresh_token: localStorage.getItem('auth').refresh_token
+                    refresh_token: JSON.parse(localStorage.getItem('auth')).refresh_token
                 });
 
                 if (response.status === 200) {
                     commit('setAuthJwt', response.data);
-                    localStorage.setItem('auth', response.data);
+                    localStorage.setItem('auth', JSON.stringify(response.data));
 
                     await store.dispatch('sidebarStore/getSidebar');
     

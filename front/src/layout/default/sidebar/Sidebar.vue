@@ -49,10 +49,6 @@ export default {
     }
   },
   async mounted(){
-    if (!localStorage.getItem('sidebar') || (localStorage.getItem('sidebarLang') && localStorage.getItem('sidebarLang') != this.$cookies.get('keep_locale')) || !localStorage.getItem('sidebarLang') ) {
-        await this.$store.dispatch('sidebarStore/getSidebar');
-    }
-
     this.sidebarItems = this.$store.getters['sidebarStore/getSidebar'];
 
     let Break = { mb: 420, sm: 576, md: 768, lg: 992, xl: 1200, xxl: 1540, any: Infinity };

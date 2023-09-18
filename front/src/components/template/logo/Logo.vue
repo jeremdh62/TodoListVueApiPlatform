@@ -27,12 +27,12 @@ export default {
             default: false,
         },
         logoWidth: {
-            type: String,
-            default: '',
+            type: Number,
+            default: null,
         },
         logoHeight: {
-            type: String,
-            default: '',
+            type: Number,
+            default: null,
         },
         
     },

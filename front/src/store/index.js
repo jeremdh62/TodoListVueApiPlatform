@@ -3,7 +3,8 @@ import axios from "axios";
 
 import authStore from "./auth";
 import sidebarStore from "./sidebar";
-import userInfoStore from "./userInfo";
+import taskStore from "./tasks";
+import userStore from "./users";
 
 // Get URL API from .env
 const URL_API = import.meta.env.VITE_APP_URL_API;
@@ -16,7 +17,7 @@ const instanceAxios = axios.create({
 // Add token to header
 instanceAxios.interceptors.request.use(
   config => {
-    const token = localStorage.getItem('auth')?.token;
+    const token = JSON.parse(localStorage.getItem('auth'))?.token;
     if (token && config.url != '/auth' && config.url != '/auth/token/refresh') {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -61,7 +62,8 @@ const store = createStore({
   modules: {
     authStore: authStore,
     sidebarStore: sidebarStore,
-    userInfoStore: userInfoStore,
+    taskStore: taskStore,
+    userStore: userStore,
   },
 });
 
