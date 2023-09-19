@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Controller\RegisterController;
 use App\Controller\UpdateController;
+use App\Model\UserOwnedInterface;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -34,6 +36,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[Post(
     name: 'create_user',
     uriTemplate: '/users',
+    security: "is_granted('ROLE_ADMIN')",
     denormalizationContext: ['groups' => ['write_user']],
     normalizationContext: ['groups' => ['read_user']],
     controller: RegisterController::class,
@@ -42,25 +45,35 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[Get(
     name: 'get_user',
     uriTemplate: '/users/{id}',
+    security: "is_granted('ROLE_ADMIN')",
     denormalizationContext: ['groups' => ['write_user']],
     normalizationContext: ['groups' => ['read_user']],
 )]
 #[GetCollection(
     name: 'get_all_users',
     uriTemplate: '/users',
+    security: "is_granted('ROLE_USER')",
     paginationEnabled: true,
-    denormalizationContext: ['groups' => ['write_user']],
+    denormalizationContext: ['groups' => ['collection_write_user']],
     normalizationContext: ['groups' => ['read_user']],
 )]
 #[Patch(
     name: 'patch_user',
     uriTemplate: '/users/{id}',
+    security: "is_granted('ROLE_ADMIN')",
     controller: UpdateController::class,
     denormalizationContext: ['groups' => ['update_user']],
     normalizationContext: ['groups' => ['read_user']],
 
 )]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[Delete(
+    name: 'delete_user',
+    uriTemplate: '/users/{id}',
+    security: "is_granted('ROLE_ADMIN')",
+    denormalizationContext: ['groups' => ['write_user']],
+    normalizationContext: ['groups' => ['read_user']],
+)]
+class User implements UserInterface, PasswordAuthenticatedUserInterface, UserOwnedInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -103,6 +116,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = ['ROLE_OBSERVATOR'];
         $this->tasks = new ArrayCollection();
     }
+
+    public static function getUserQuery(): array
+    {
+       return [
+            'name' => 'id'
+       ];
+    }
+
 
     public function getId(): ?int
     {

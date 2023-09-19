@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\enum\PriorityTask;
 use App\enum\StatusTask;
+use App\Model\UserOwnedInterface;
 use App\Repository\TaskRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -28,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[GetCollection(
     uriTemplate: "/tasks",
-    security: "is_granted('ROLE_USER')",
+    security: "is_granted('ROLE_OBSERVATOR')",
     paginationEnabled: true,
     paginationItemsPerPage: 10,
     order: ['deadline' => 'ASC'],
@@ -51,7 +52,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[Get(
     uriTemplate: "/tasks/{id}",
-    security: "is_granted('ROLE_USER')",
+    security: "is_granted('ROLE_OBSERVATOR')",
     denormalizationContext: [
         'groups' => ['task:write']
     ],
@@ -69,7 +70,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'groups' => ['task:read']
     ]
 )]
-class Task
+class Task implements UserOwnedInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -103,6 +104,13 @@ class Task
     #[ORM\JoinColumn(nullable: true)]
     #[Groups(['task:read', 'task:write'])]
     private ?User $attachedTo;
+
+    public static function getUserQuery(): array
+    {
+        return [
+            'name' => 'attachedTo',
+        ];
+    }
 
     public function getId(): ?int
     {
