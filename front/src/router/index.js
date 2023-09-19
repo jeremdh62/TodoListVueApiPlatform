@@ -9,10 +9,14 @@ import routePages from './pages';
 // error pages
 import routeError from './error';
 
+// import pages
+import routeUsers from './users';
+
 const routes = [];
 
 routes.push(...routeAuth);
 routes.push(...routePages);
+routes.push(...routeUsers);
 
 // error pages
 routes.push(...routeError);

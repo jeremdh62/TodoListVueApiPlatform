@@ -42,7 +42,7 @@ export default {
     methods:{
         handleSignout(){
             this.$store.dispatch('authStore/logout');
-            //this.$router.push('/auths/auth-login');
+            this.$router.push('/auths/auth-login');
         }
     },
     components:{

@@ -3,9 +3,12 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Controller\RegisterController;
+use App\Controller\UpdateController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -28,12 +31,34 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['read_user']],
     processor: UserPasswordHasher::class,
 )]
+#[Post(
+    name: 'create_user',
+    uriTemplate: '/users',
+    denormalizationContext: ['groups' => ['write_user']],
+    normalizationContext: ['groups' => ['read_user']],
+    controller: RegisterController::class,
+    processor: UserPasswordHasher::class,
+)]
+#[Get(
+    name: 'get_user',
+    uriTemplate: '/users/{id}',
+    denormalizationContext: ['groups' => ['write_user']],
+    normalizationContext: ['groups' => ['read_user']],
+)]
 #[GetCollection(
     name: 'get_all_users',
     uriTemplate: '/users',
     paginationEnabled: true,
     denormalizationContext: ['groups' => ['write_user']],
     normalizationContext: ['groups' => ['read_user']],
+)]
+#[Patch(
+    name: 'patch_user',
+    uriTemplate: '/users/{id}',
+    controller: UpdateController::class,
+    denormalizationContext: ['groups' => ['update_user']],
+    normalizationContext: ['groups' => ['read_user']],
+
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -44,27 +69,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['read_user', 'write_user'])]
+    #[Groups(['read_user', 'write_user', 'update_user'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['read_user', 'write_user'])]
+    #[Groups(['read_user', 'write_user', 'update_user'])]
     private ?string $username = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $token = null;
 
     #[ORM\Column]
+    #[Groups(['read_user', 'update_user'])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
-    #[Groups(['write_user'])]
+    #[Groups(['write_user', 'update_user'])]
     private ?string $password = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read_user', 'write_user', 'update_user'])]
     private ?bool $isVerify = null;
 
     #[ORM\OneToMany(mappedBy: 'attachedTo', targetEntity: Task::class)]
@@ -73,7 +100,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->isVerify = false;
-        $this->roles = ['ROLE_USER'];
+        $this->roles = ['ROLE_OBSERVATOR'];
         $this->tasks = new ArrayCollection();
     }
 

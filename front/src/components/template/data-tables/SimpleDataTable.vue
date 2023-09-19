@@ -63,7 +63,7 @@ export default {
                         noRows: 'No data',
                         searchTitle: 'Search in' + ' {columns} ' + ' columns',
                         noResults: 'No data',
-                        info: 'Showing {start} simpleDatatable.to {end} of {rows} entries',
+                        info: 'Showing {start} to {end} of {rows} entries',
                     },
                     perPage: 10,
                 });

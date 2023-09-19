@@ -22,19 +22,14 @@
                             v-model="taskData.description" 
                             required
                         /> 
-                        
-                        <DatePicker 
-                            :id="idDatepicker" 
-                            title="Date Due" 
-                            :value="taskData.deadline" 
-                            @change="(e) => taskData.deadline = e.target.datepicker.getDate()" 
-                            :todayBtn="true" 
-                            class="mb-4" 
-                            :todayBtnMode="1" 
-                            :clearBtn="true" 
-                            placeholder="dd/mm/yyyy" 
+
+                        <FormInput
+                            type="date"
+                            placeholder="Date Due"
+                            class="mb-4"
+                            v-model="taskData.deadline"
                             required
-                        /> 
+                        />
 
                         <ChoiceSelect placeholder="Status" :cross="false" :value="taskData.status" @change="(e) => taskData.status = e.target.value">
                             <ChoiceSelectOption v-for="status in statusList" :key="status.value" :value="status.value"> {{ status.text }} </ChoiceSelectOption>

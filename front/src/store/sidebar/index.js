@@ -19,12 +19,12 @@ const sidebarStore = {
                     {
                         id: uuidv4(),
                         title: 'Users List',
-                        url: '/user-manage/user-list'
+                        url: '/users'
                     },
                     {
                         id: uuidv4(),
-                        title: 'User Edit',
-                        url: '/user-manage/user-edit/uid01'
+                        title: 'User Add',
+                        url: '/users/add'
                     },
                 ]
             },

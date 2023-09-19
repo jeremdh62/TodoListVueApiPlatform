@@ -142,15 +142,6 @@ export default {
 
     SidebarInit();
 
-  },
-  watch: {
-    '$i18n.locale': {
-        handler: async function (val, oldVal) {
-            await this.$store.dispatch('sidebarStore/getSidebar');
-            this.sidebarItems = this.$store.getters['sidebarStore/getSidebar'];
-        },
-        deep: true
-    }
   }
 }
 </script>

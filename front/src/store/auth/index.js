@@ -8,8 +8,9 @@ const authStore = {
     state: () => ({
         authJWT: localStorageAuth ?localStorageAuth : null,
         jwtDecoded: localStorageAuth ? jwt_decode(localStorageAuth.token) : null,
-        userName: localStorageAuth ? jwt_decode(localStorageAuth.token).username : null,
-        userNameFormated: localStorageAuth ? formatUserName(jwt_decode(localStorageAuth.token).username) : null,
+        userName: localStorageAuth ? jwt_decode(localStorageAuth.token).realusername : null,
+        email: localStorageAuth ? jwt_decode(localStorageAuth.token).username : null,
+        userNameFormated: localStorageAuth ? formatUserName(jwt_decode(localStorageAuth.token).realusername) : null,
         numberOfRefresh: 0
     }),
     mutations: {
@@ -19,7 +20,7 @@ const authStore = {
                 state.jwtDecoded = jwt_decode(authJwt.token);
                 localStorage.setItem('auth', JSON.stringify(authJwt));
                 state.userName = jwt_decode(authJwt.token).realusername;
-                state.userNameFormated = formatUserName(jwt_decode(authJwt.token).username);
+                state.userNameFormated = formatUserName(jwt_decode(authJwt.token).realusername);
             }
         },
         addNumberOfRefresh(state) {
@@ -38,6 +39,9 @@ const authStore = {
         },
         getUserName: (state) => {
             return state.userName;
+        },
+        getEmail: (state) => {
+            return state.email;
         },
         getUserNameFormated: (state) => {
             return formatUserName(state.userName);
@@ -82,8 +86,6 @@ const authStore = {
                 if (response.status === 200) {
                     commit('setAuthJwt', response.data);
                     localStorage.setItem('auth', JSON.stringify(response.data));
-
-                    await store.dispatch('sidebarStore/getSidebar');
     
                     return {status: response.status, data: response.data}
                 } else {
