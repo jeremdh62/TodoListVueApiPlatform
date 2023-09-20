@@ -68,7 +68,20 @@ const taskStore = {
             } catch (error) {
                 console.log(error);
             }
+        },
+        async updateTaskStatus({ commit }, task) {
+        
+            try {
+                await instanceAxios.patch(`/api/tasks/${task.id}/status`, task, {
+                    headers: {
+                        'Content-Type': 'application/merge-patch+json'
+                    }
+                });
+                commit('updateTask', task);
+        } catch (error) {
+            console.log(error);
         }
+    },
     }
 }
 

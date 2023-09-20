@@ -75,6 +75,17 @@ use Symfony\Component\Validator\Constraints as Assert;
         'groups' => ['task:read']
     ]
 )]
+#[Patch(
+    uriTemplate: "/tasks/{id}/status",
+    name: "attach_task",
+    security: "is_granted('ROLE_USER')",
+    denormalizationContext: [
+        'groups' => ['task:set_status']
+    ],
+    normalizationContext: [
+        'groups' => ['task:read']
+    ]
+)]
 class Task implements UserOwnedInterface
 {
     #[ORM\Id]
@@ -97,7 +108,7 @@ class Task implements UserOwnedInterface
     private ?string $priority;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['task:read', 'task:write'])]
+    #[Groups(['task:read', 'task:write','task:set_status'])]
     #[Assert\Choice(choices: [StatusTask::TODO->value, StatusTask::DOING->value, StatusTask::DONE->value])]
     private ?string $status;
 

@@ -17,14 +17,14 @@
         <div class="kanban-custom-board" v-if="taskLoading">
             <div class="kanban-container">
                 <KanbanBoardCustom title="Todo" variant="kanban-light" :count="tasks.todo.length">
-                    <draggable class="kanban-drag" :list="tasks.todo" item-key="id" group="tasks">
+                    <draggable class="kanban-drag" :list="tasks.todo" @drop="(e) => {updateTask(e, 'TODO')}" item-key="id" group="tasks">
                      <template #item="{element}">
-                            <div class="kanban-item" data-bs-toggle="modal" :data-bs-target="'#editTask'+element.id">
-                                <div class="kanban-item-title">
-                                    <h6 class="title">{{element.title}}</h6>
+                            <div :data-task="element.id" class="kanban-item" data-bs-toggle="modal" :data-bs-target="'#editTask'+element.id">
+                                <div :data-task="element.id" class="kanban-item-title">
+                                    <h6 :data-task="element.id" class="title">{{element.title}}</h6>
                                 </div>
-                                <div class="kanban-item-text">
-                                    <p>{{element.description}}</p>
+                                <div :data-task="element.id" class="kanban-item-text">
+                                    <p :data-task="element.id">{{element.description}}</p>
                                 </div>
                                 <ModalTask isPageEdit v-if="currentUserRole.includes('ROLE_USER') || currentUserRole.includes('ROLE_ADMIN')" :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" />
                             </div>
@@ -33,14 +33,14 @@
                 </KanbanBoardCustom>
                 
                 <KanbanBoardCustom title="In Process" variant="kanban-primary" :count="tasks.doing.length">
-                    <draggable class="kanban-drag" :list="tasks.doing" item-key="id" group="tasks">
+                    <draggable class="kanban-drag" :list="tasks.doing" @drop="(e) => {updateTask(e, 'DOING')}" item-key="id" group="tasks">
                         <template #item="{element}">
-                            <div class="kanban-item" data-bs-toggle="modal" :data-bs-target="'#editTask'+element.id">
-                                <div class="kanban-item-title">
-                                    <h6 class="title">{{element.title}}</h6>
+                            <div :data-task="element.id" class="kanban-item" data-bs-toggle="modal" :data-bs-target="'#editTask'+element.id">
+                                <div :data-task="element.id" class="kanban-item-title">
+                                    <h6 :data-task="element.id" class="title">{{element.title}}</h6>
                                 </div>
-                                <div class="kanban-item-text">
-                                    <p>{{element.description}}</p>
+                                <div :data-task="element.id" class="kanban-item-text">
+                                    <p :data-task="element.id">{{element.description}}</p>
                                 </div>
                                 <ModalTask v-if="currentUserRole.includes('ROLE_USER') || currentUserRole.includes('ROLE_ADMIN')" :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" isPageEdit />
                             </div>
@@ -49,14 +49,14 @@
                 </KanbanBoardCustom>
 
                 <KanbanBoardCustom title="Completed" variant="kanban-success" :count="tasks.done.length">
-                    <draggable class="kanban-drag" :list="tasks.done" item-key="id" group="tasks">
+                    <draggable class="kanban-drag" :list="tasks.done"  @drop="(e) => {updateTask(e, 'DONE')}" item-key="id" group="tasks">
                         <template #item="{element}">
-                            <div class="kanban-item" data-bs-toggle="modal" :data-bs-target="'#editTask'+element.id">
-                                <div class="kanban-item-title">
-                                    <h6 class="title">{{element.title}}</h6>
+                            <div :data-task="element.id" class="kanban-item" data-bs-toggle="modal" :data-bs-target="'#editTask'+element.id">
+                                <div :data-task="element.id" class="kanban-item-title">
+                                    <h6 :data-task="element.id" class="title">{{element.title}}</h6>
                                 </div>
-                                <div class="kanban-item-text">
-                                    <p>{{element.description}}</p>
+                                <div :data-task="element.id" class="kanban-item-text">
+                                    <p :data-task="element.id">{{element.description}}</p>
                                 </div>
                                 <ModalTask isPageEdit v-if="currentUserRole.includes('ROLE_USER') || currentUserRole.includes('ROLE_ADMIN')" :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" />
                             </div>
@@ -134,6 +134,18 @@ export default {
 
                 this.taskLoading = true;
             });
+        },
+        updateTask(e, value) {
+            const task = {
+                id: Number(e.srcElement.dataset.task),
+                status: value,
+            }
+
+            setTimeout(() => {
+                this.$store.dispatch('taskStore/updateTaskStatus', task).then(() => {
+                    //this.updateKanban();
+                });
+            }, 50);
         }
     }
 
