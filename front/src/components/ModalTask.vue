@@ -103,7 +103,7 @@
                 taskData: {
                     title: '',
                     description: '',
-                    deadline: new Date(),
+                    deadline: '',
                     status: '',
                     priority: '',
                     attachedTo: null
@@ -127,12 +127,7 @@
             if (this.task) {
                 this.taskData = this.task
                     
-                if(typeof this.taskData.deadline === 'string')  {
-                    this.taskData.deadline = new Date(this.taskData.deadline)
-                } else {
-                    this.taskData.deadline = this.taskData.deadline
-                }
-                
+                this.taskData.deadline = this.taskData.deadline
                 this.idDatepicker = this.idDatepicker + '-' + this.task.id
 
                 this.isEdit = true

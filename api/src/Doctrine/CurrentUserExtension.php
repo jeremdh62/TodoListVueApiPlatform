@@ -28,7 +28,12 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryIt
 
     public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, Operation $operation = null, array $context = []) : void
     {
-        $this->addWhere($queryBuilder, $resourceClass, $context['operation_name']);
+        if (array_key_exists('operation_name', $context)) {
+            $operationName = $context['operation_name'];
+        } else {
+            $operationName = '';
+        }
+        $this->addWhere($queryBuilder, $resourceClass, $operationName);
     }
 
 
@@ -54,7 +59,6 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryIt
                 } else {
                     $queryBuilder->andWhere(sprintf('%s.id = :current_user', $rootAlias));
                     $queryBuilder->setParameter('current_user', $user->getId());
-                    dd($queryBuilder->getQuery()->getResult());
                     return;
                 }
             }
@@ -88,7 +92,7 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryIt
 
             }  else {
                 $queryBuilder->andWhere(sprintf('%s.id = :current_user', $rootAlias));
-            }   
+            }
 
             // get organization id from code with campaign id
 

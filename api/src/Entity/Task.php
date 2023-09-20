@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 #[Post(
     uriTemplate: "/tasks",
+    name: "create_task",
     security: "is_granted('ROLE_USER')",
     denormalizationContext: [
         'groups' => ['task:write']
@@ -29,6 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[GetCollection(
     uriTemplate: "/tasks",
+    name: "get_all_tasks",
     security: "is_granted('ROLE_OBSERVATOR')",
     paginationEnabled: true,
     paginationItemsPerPage: 10,
@@ -42,6 +44,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[Patch(
     uriTemplate: "/tasks/{id}",
+    name: "update_task",
     security: "is_granted('ROLE_USER')",
     denormalizationContext: [
         'groups' => ['task:write']
@@ -52,6 +55,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[Get(
     uriTemplate: "/tasks/{id}",
+    name: "get_task",
     security: "is_granted('ROLE_OBSERVATOR')",
     denormalizationContext: [
         'groups' => ['task:write']
@@ -62,6 +66,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[Delete(
     uriTemplate: "/tasks/{id}",
+    name: "delete_task",
     security: "is_granted('ROLE_USER')",
     denormalizationContext: [
         'groups' => ['task:write']
@@ -108,7 +113,15 @@ class Task implements UserOwnedInterface
     public static function getUserQuery(): array
     {
         return [
-            'name' => 'attachedTo',
+            'name' => 'task',
+            'join' => [
+                [
+                'parent' => 'rootAlias',
+                'field' => 'attachedTo',
+                'alias' => 'attachedTo'
+                ]
+            ],
+            'last_alias' => 'attachedTo'
         ];
     }
 

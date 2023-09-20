@@ -39,6 +39,8 @@ const taskStore = {
             try {
                 if (task.attachedTo == null) {
                     task.attachedTo = undefined;
+                } else {
+                    task.attachedTo = `/api/users/${task.attachedTo}`;
                 }
 
                 const response = await instanceAxios.post('/api/tasks', task);
