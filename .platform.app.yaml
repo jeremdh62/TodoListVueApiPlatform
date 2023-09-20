@@ -31,17 +31,6 @@ mounts:
 # The size of the persistent disk of the application (in MB).
 disk: 2048
 
-hooks:
-    build: |
-      set -x -e
-      cd back
-      curl -s https://get.symfony.com/cloud/configurator | bash
-      COMPOSER_FLAGS="--ignore-platform-reqs" symfony-build
-    deploy: |
-      set -x -e
-      cd back
-      symfony-deploy
-
 # The relationships of the application with services or other applications.
 #
 # The left-hand side is the name of the relationship as it will be exposed
@@ -52,10 +41,15 @@ relationships:
 
 
 hooks:
-    build: |
-      set -e
-    deploy: |
-      set -e
+  build: |
+    set -x -e
+    cd api
+    curl -s https://get.symfony.com/cloud/configurator | bash
+    COMPOSER_FLAGS="--ignore-platform-reqs" symfony-build
+  deploy: |
+    set -x -e
+    cd api
+    symfony-deploy
 
 web:
   locations: 
