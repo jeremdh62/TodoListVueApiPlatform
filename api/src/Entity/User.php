@@ -29,7 +29,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     name: 'user_register',
     uriTemplate: '/register',
     controller: RegisterController::class,
-    denormalizationContext: ['groups' => ['write_user']],
+    denormalizationContext: ['groups' => ['register_user']],
     normalizationContext: ['groups' => ['read_user']],
     processor: UserPasswordHasher::class,
 )]
@@ -82,11 +82,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, UserOwn
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['read_user', 'write_user', 'update_user'])]
+    #[Groups(['read_user', 'write_user', 'update_user', 'register_user'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['read_user', 'write_user', 'update_user'])]
+    #[Groups(['read_user', 'write_user', 'update_user', 'register_user'])]
     private ?string $username = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -100,7 +100,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, UserOwn
      * @var string The hashed password
      */
     #[ORM\Column]
-    #[Groups(['write_user', 'update_user'])]
+    #[Groups(['write_user', 'update_user', 'register_user'])]
     private ?string $password = null;
 
     #[ORM\Column(nullable: true)]

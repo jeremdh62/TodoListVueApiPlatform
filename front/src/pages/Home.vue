@@ -4,7 +4,7 @@
             <BlockHeadContent class="d-flex justify-content-between">
                 <BlockTitle tag="h1">Kanban Board</BlockTitle>
 
-                <ul>
+                <ul v-if="currentUserRole.includes('ROLE_USER') || currentUserRole.includes('ROLE_ADMIN')">
                     <li>
                         <Button variant="success" class="mb-2" data-bs-toggle="modal" data-bs-target="#addTask" >Add</Button>
                         <ModalTask id="addTask" title="Add Task" @save-task="updateKanban" />
@@ -26,7 +26,7 @@
                                 <div class="kanban-item-text">
                                     <p>{{element.description}}</p>
                                 </div>
-                                <ModalTask :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" />
+                                <ModalTask v-if="currentUserRole.includes('ROLE_USER') || currentUserRole.includes('ROLE_ADMIN')" :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" />
                             </div>
                         </template>
                     </draggable>
@@ -42,7 +42,7 @@
                                 <div class="kanban-item-text">
                                     <p>{{element.description}}</p>
                                 </div>
-                                <ModalTask :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" />
+                                <ModalTask v-if="currentUserRole.includes('ROLE_USER') || currentUserRole.includes('ROLE_ADMIN')" :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" />
                             </div>
                         </template>
                     </draggable>
@@ -58,7 +58,7 @@
                                 <div class="kanban-item-text">
                                     <p>{{element.description}}</p>
                                 </div>
-                                <ModalTask :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" />
+                                <ModalTask v-if="currentUserRole.includes('ROLE_USER') || currentUserRole.includes('ROLE_ADMIN')" :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" />
                             </div>
                         </template>
                     </draggable>
@@ -108,6 +108,7 @@ export default {
                 done: [],
             },
             taskLoading: false,
+            currentUserRole: this.$store.getters['authStore/getRoles']
       };
     },
     async mounted() {

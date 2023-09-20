@@ -1,51 +1,45 @@
+<!-- eslint-disable vue/no-reserved-component-names -->
 <template>
     <AppRoot>
         <AppMain>
             <AppWrap class="align-items-center justify-content-center">
-                <Container class="p-2 p-sm-4">
-                    <Card class="overflow-hidden rounded-4 card-auth card-auth-mh" gutter="lg">
-                        <Row utils="g-0 flex-lg-row-reverse">
-                            <Col lg="5">
-                                <CardBody>
-                                    <div class="nk-block-head text-center">
-                                        <div class="nk-block-head-content">
-                                            <h3 class="nk-block-title mb-1">Create New Account</h3>
-                                            <p class="small">Use your remail email continue with Nioboard (it's free)!</p>
+                <Container class="p-2 p-sm-4 ">
+                    <div class="wide-xs mx-auto">
+                        <Card class="overflow-hidden rounded-4 card-auth" gutter="lg">
+                            <Row utils="g-0 flex-lg-row-reverse">
+                                <Col lg="12">
+                                    <CardBody class="bg-darker is-theme has-mask has-mask-1 h-100 d-flex flex-column justify-content-center">
+                                        <div class="mask mask-1"></div><!-- .mask-->
+                                        <div class="nk-block-head text-center">
+                                            <div class="brand-logo">
+                                                <Logo :isKeep="true" :logo-width="50" />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <form action="#">
-                                        <Row utils="gy-3">
+                                        <form action="#" @submit.prevent="setAuth" id="loginForm">
+                                            <Row utils="gy-3">
                                             <Col lg="12">
                                                 <div class="form-group">
-                                                    <FormLabel for="username">Username</FormLabel>
+                                                    <FormLabel class="text-white" for="username">Username</FormLabel>
                                                     <FormInputWrap>
-                                                        <FormInput type="text" id="username" placeholder="Enter username"/>
+                                                        <FormInput v-model="authForm.username" type="text" id="username" placeholder="Enter username"/>
                                                     </FormInputWrap>
                                                 </div><!-- .form-group -->
                                             </Col>
                                             <Col lg="12">
                                                 <div class="form-group">
-                                                    <FormLabel for="email">Email</FormLabel>
+                                                    <FormLabel class="text-white" for="email">Email</FormLabel>
                                                     <FormInputWrap>
-                                                        <FormInput type="email" id="email" placeholder="Enter email address"/>
+                                                        <FormInput v-model="authForm.email" type="email" id="email" required placeholder="Enter email address"/>
                                                     </FormInputWrap>
                                                 </div><!-- .form-group -->
                                             </Col>
                                             <Col lg="12">
                                                 <div class="form-group">
-                                                    <FormLabel for="password">Password</FormLabel>
+                                                    <FormLabel class="text-white" for="password">Password</FormLabel>
                                                     <FormInputWrap>
-                                                        <FormInput type="password" id="password" placeholder="Enter password"/>
+                                                        <FormInput  v-model="authForm.password" type="password" required id="password" placeholder="Enter password"/>
                                                     </FormInputWrap>
                                                 </div><!-- .form-group -->
-                                            </Col>
-                                            <Col lg="12">
-                                                <FormCheck size="sm">
-                                                    <FormCheckInput type="checkbox" value="" id="iAgree"/>
-                                                    <FormCheckLabel for="iAgree">
-                                                        I agree to privacy policy & terms
-                                                    </FormCheckLabel>
-                                                </FormCheck>
                                             </Col>
                                             <Col lg="12">
                                                 <div class="d-grid">
@@ -53,43 +47,33 @@
                                                 </div>
                                             </Col>
                                         </Row>
-                                    </form>
-                                    <div class="my-3 text-center">
-                                        <OverlineTitle tag="h6" class="overline-title-sep"><span>OR</span></OverlineTitle>
-                                    </div>
-                                    <Row utils="g-2">
-                                        <Col xxl="6">
-                                            <Button href="#" variant="outline-light" class="w-100">
-                                                <Img src="/images/icon/d.png" alt="" class="icon" />
-                                                <span class="fw-medium">Continue with Google</span>
-                                            </Button>
-                                        </Col>
-                                        <Col xxl="6">
-                                            <Button href="#" variant="outline-light" class="w-100">
-                                                <Img src="/images/icon/b.png" alt="" class="icon" />
-                                                <span class="fw-medium">Continue with Facebook</span>
-                                            </Button>
-                                        </Col>
-                                    </Row>
+                                        </form>
                                     <div class="text-center mt-4">
-                                        <p class="small">Already have an account? <router-link to="/auths/auth-login">Login</router-link></p>
-                                    </div>
-                                </CardBody>
-                            </Col>
-                            <Col lg="7">
-                                <CardBody class="bg-darker is-theme has-mask has-mask-1 h-100 d-flex flex-column justify-content-end">
-                                    <div class="mask mask-1"></div><!-- .mask-->
-                                    <div class="brand-logo">
-                                        <Logo :isKeep="true" :logo-width="50" />
-                                    </div>
-                                   
-                                </CardBody>
-                            </Col>
-                        </Row>
-                    </Card>
+                                        <p class="small">Already have an account? <router-link to="/auths/auth-login">Login</router-link></p>                                    </div>
+                                    </CardBody>
+                                </Col>
+                            </Row>
+                        </Card>
+                    </div>
                 </Container>
             </AppWrap>
         </AppMain>
+        <ToastContainer class="position-fixed end-0 bottom-0 p-3">
+            <Toast class="fade text-bg-danger border-danger" :class="authForm.showError && 'show'">
+                <ToastBody>
+                        Register failed, please try again
+                </ToastBody>
+            </Toast>
+        </ToastContainer>
+
+        <ToastContainer class="position-fixed end-0 bottom-0 p-3">
+            <Toast class="fade text-bg-danger border-success" :class="authForm.showSuccess && 'show'">
+                <ToastBody>
+                     Register success, verify your email
+                </ToastBody>
+            </Toast>
+        </ToastContainer>
+
     </AppRoot>
 </template>
 
@@ -114,6 +98,12 @@ import FormCheckLabel from '@/components/template/forms/form-check/FormCheckLabe
 import FormCheck from '@/components/template/forms/form-check/FormCheck.vue';
 import Button from '@/components/template/uielements/button/Button.vue';
 import OverlineTitle from '@/components/template/misc/OverlineTitle.vue';
+import FormInputIcon from '@/components/template/forms/input/FormInputIcon.vue';
+import Icon from '@/components/template/icon/Icon.vue';
+import FormGroup from '@/components/template/forms/FormGroup.vue';
+import ToastContainer from '@/components/template/uielements/toast/ToastContainer.vue';
+import Toast from '@/components/template/uielements/toast/Toast.vue';
+import ToastBody from '@/components/template/uielements/toast/ToastBody.vue';
 
 export default {
     name: 'AuthRegisterPage',
@@ -136,8 +126,50 @@ export default {
         FormCheck,
         FormCheckInput,
         FormCheckLabel,
+        FormGroup,
         Button,
-        OverlineTitle
+        OverlineTitle,
+        FormInputIcon,
+        Icon,
+        Toast,
+        ToastBody,
+        ToastContainer
     },
+    data(){
+        return{
+            authForm:{
+                email:'',
+                password: '',
+                username: '',
+                showError: false,
+                showSuccess: false,
+            },
+        }
+    },
+    methods:{
+        setAuth(e){
+            e.preventDefault();
+            const email = this.authForm.email;
+            const password = this.authForm.password;
+            const username = this.authForm.username;
+
+            const isLog = this.$store.dispatch('authStore/register', { email: email, password: password, username: username });
+
+            isLog.then((res) => {
+                if(res.status === 200){
+                    this.$router.push('/auths/auth-login');
+                    this.authForm.showSuccess = true;
+                    setTimeout(() => {
+                        this.authForm.showSuccess = false;
+                    }, 20000);
+                }else{
+                    this.authForm.showError = true;
+                    setTimeout(() => {
+                        this.authForm.showError = false;
+                    }, 20000);
+                }
+            });
+        }
+    }
 }
 </script>

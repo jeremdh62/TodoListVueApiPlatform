@@ -48,6 +48,9 @@ const authStore = {
         },
         getNumberOfRefresh: (state) => {
             return state.numberOfRefresh;
+        },
+        getRoles: (state) => {
+            return state.jwtDecoded.roles;
         }
     },
     actions: {
@@ -96,6 +99,22 @@ const authStore = {
                 await store.dispatch('authStore/logout');
                 return {status: error.response.status, data: error.response.data}
             }
+        },
+        register: async ({ commit }, user) => {
+                try {
+                    const response = await instanceAxios.post('/api/register', user);
+                    if (response.status === 201) {
+                        return {status: response.status, data: response.data}
+                    } else {
+                        return {status: response.status, data: response.data}
+                    }
+                } catch (error) {
+                    if (error.response) {
+                        return {status: error.response.status, data: error.response.data}
+                    } else {
+                        return {status: 500, data: error}
+                    }
+                }
         }
     }
 }
