@@ -26,7 +26,7 @@
                                 <div class="kanban-item-text">
                                     <p>{{element.description}}</p>
                                 </div>
-                                <ModalTask v-if="currentUserRole.includes('ROLE_USER') || currentUserRole.includes('ROLE_ADMIN')" :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" />
+                                <ModalTask isPageEdit v-if="currentUserRole.includes('ROLE_USER') || currentUserRole.includes('ROLE_ADMIN')" :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" />
                             </div>
                         </template>
                     </draggable>
@@ -42,7 +42,7 @@
                                 <div class="kanban-item-text">
                                     <p>{{element.description}}</p>
                                 </div>
-                                <ModalTask v-if="currentUserRole.includes('ROLE_USER') || currentUserRole.includes('ROLE_ADMIN')" :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" />
+                                <ModalTask v-if="currentUserRole.includes('ROLE_USER') || currentUserRole.includes('ROLE_ADMIN')" :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" isPageEdit />
                             </div>
                         </template>
                     </draggable>
@@ -58,7 +58,7 @@
                                 <div class="kanban-item-text">
                                     <p>{{element.description}}</p>
                                 </div>
-                                <ModalTask v-if="currentUserRole.includes('ROLE_USER') || currentUserRole.includes('ROLE_ADMIN')" :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" />
+                                <ModalTask isPageEdit v-if="currentUserRole.includes('ROLE_USER') || currentUserRole.includes('ROLE_ADMIN')" :id="'editTask'+element.id" title="Edit Task" @save-task="updateKanban" :task="element" />
                             </div>
                         </template>
                     </draggable>

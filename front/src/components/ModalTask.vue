@@ -45,7 +45,7 @@
                         </ChoiceSelect>
                     </ModalBody>
                     <ModalFooter>
-                        <Button type="button" @click="deleteTask" variant="danger">Delete</Button>
+                        <Button v-if="isPageEdit" type="button" @click="deleteTask" variant="danger">Delete</Button>
                         <Button type="button" variant="secondary" data-bs-dismiss="modal">Close</Button>
                         <Button variant="primary">Save changes</Button>
                     </ModalFooter>
@@ -82,6 +82,10 @@
             task: {
                 type: Object,
                 default: null
+            },
+            isPageEdit: {
+                type: Boolean,
+                default: false
             }
         },
         components: {
