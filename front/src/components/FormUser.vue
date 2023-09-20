@@ -128,6 +128,22 @@
                 })
 
                 return roleValue;
+          },
+          setRole (role) {
+            const setRoles = [];
+
+            if (role == 'ROLE_ADMIN') {
+                setRoles.push('ROLE_ADMIN');
+                setRoles.push('ROLE_USER');
+                setRoles.push('ROLE_OBSERVATOR');
+            } else if (role == 'ROLE_USER') {
+                setRoles.push('ROLE_USER');
+                setRoles.push('ROLE_OBSERVATOR');
+            } else if (role == 'ROLE_OBSERVATOR') {
+                setRoles.push('ROLE_OBSERVATOR');
+            }
+
+            return setRoles;
           }
         }
     }

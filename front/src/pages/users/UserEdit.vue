@@ -134,6 +134,8 @@
                         userData.password = this.$refs.formUser.password;
                     }
 
+                    userData.roles = this.$refs.formUser.setRole(this.$refs.formUser.role);
+
                     userData.isVerify = this.$refs.formUser.isVerify;
                  
                  this.$store.dispatch(this.storeName, userData).then((res) => {
