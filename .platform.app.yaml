@@ -15,12 +15,32 @@ type: 'php:8.2'
 # application container. The 'source_path' specifies the subdirectory
 # from within the source that the mount should point at. 
 mounts:
-  'web/uploads':
+  'api/public/uploads':
     source: local
     source_path: uploads
+  'api/var/log':
+    source: local
+    source_path: log
+  'api/var/cache':
+    source: local
+    source_path: cache
+  'api/config/jwt':
+    source: local
+    source_path: jwt
 
 # The size of the persistent disk of the application (in MB).
 disk: 2048
+
+hooks:
+    build: |
+      set -x -e
+      cd back
+      curl -s https://get.symfony.com/cloud/configurator | bash
+      COMPOSER_FLAGS="--ignore-platform-reqs" symfony-build
+    deploy: |
+      set -x -e
+      cd back
+      symfony-deploy
 
 # The relationships of the application with services or other applications.
 #
@@ -42,3 +62,12 @@ web:
     '/': 
       root: "api/public"
       passthru: "/index.php"
+      allow: true
+
+dependencies:
+    php:
+        composer/composer: '^1'
+
+runtime:
+    extensions:
+        - pdo_pgsql
