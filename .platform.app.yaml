@@ -39,6 +39,6 @@ hooks:
 
 web:
   locations: 
-    '/': 
+    '/api': 
       root: "web"
       passthru: "/index.php"
